@@ -160,7 +160,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void delete(){
         String[] arrOfTxtScreen = txtScreen.getText().toString().split(" ");
-        System.out.println(Arrays.toString(arrOfTxtScreen));
         switch (arrOfTxtScreen.length){
             case 3:
                 txtScreen.setText(txtScreen.getText().toString().substring(0, txtScreen.getText().toString().length() - 1));
