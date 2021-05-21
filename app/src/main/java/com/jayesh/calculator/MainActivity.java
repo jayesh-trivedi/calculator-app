@@ -8,13 +8,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Arrays;
-
 public class MainActivity extends AppCompatActivity {
 
-    private int[] numericButtons = {R.id.btnZero, R.id.btnOne, R.id.btnTwo, R.id.btnThree, R.id.btnFour, R.id.btnFive, R.id.btnSix, R.id.btnSeven, R.id.btnEight, R.id.btnNine, R.id.btnDot};
-    private int[] operatorButtons = {R.id.btnAdd, R.id.btnSubtract, R.id.btnMultiply, R.id.btnDivide};
-    private int [] keyButtons = { R.id.btnClear, R.id.btnDelete, R.id.btnEqual};
+    final int[] numericButtons = {R.id.btnZero, R.id.btnOne, R.id.btnTwo, R.id.btnThree, R.id.btnFour, R.id.btnFive, R.id.btnSix, R.id.btnSeven, R.id.btnEight, R.id.btnNine, R.id.btnDot};
+    final int[] operatorButtons = {R.id.btnAdd, R.id.btnSubtract, R.id.btnMultiply, R.id.btnDivide};
+    final int [] keyButtons = { R.id.btnClear, R.id.btnDelete, R.id.btnEqual};
     private double operand1,operand2;
     private Boolean operatorSelected = false;
     String result = "";
@@ -35,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(result != "")
+                if(!result.equals(""))
                 {
                     clear();
                 }
@@ -54,11 +52,11 @@ public class MainActivity extends AppCompatActivity {
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(result != "")
+                if(!result.equals(""))
                 {
                     clear();
                 }
-                else if(operatorSelected == false && txtScreen.getText().toString() != "") {
+                else if(!operatorSelected && !txtScreen.getText().toString().equals("")) {
                     operand1 = Double.parseDouble(txtScreen.getText().toString());
                     Button button = (Button) v;
                     txtScreen.setText(txtScreen.getText() + " " + (button.getText()) + " ");
@@ -83,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(result != "")
+                if(!result.equals(""))
                 {
                     clear();
                 }
@@ -169,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                 operatorSelected = false;
                 break;
             case 1:
-                if(txtScreen.getText().toString() != ""){
+                if(!txtScreen.getText().toString().equals("")){
                     txtScreen.setText(txtScreen.getText().toString().substring(0, txtScreen.getText().toString().length() - 1));
                     operand1 = 0.0d;
                 }
