@@ -10,12 +10,8 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final int[] numericButtons = {R.id.btnZero, R.id.btnOne, R.id.btnTwo, R.id.btnThree, R.id.btnFour, R.id.btnFive, R.id.btnSix, R.id.btnSeven, R.id.btnEight, R.id.btnNine, R.id.btnDot};
-    private final int[] operatorButtons = {R.id.btnAdd, R.id.btnSubtract, R.id.btnMultiply, R.id.btnDivide};
-    private final int [] keyButtons = { R.id.btnClear, R.id.btnDelete, R.id.btnEqual};
     private double operand1,operand2;
-    private Boolean operatorSelected = false;
-    private String result = "";
+    private boolean operatorSelected = false;
     private TextView txtScreen;
 
 
@@ -30,10 +26,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setNumerics(){
+        final int[] numericButtons = {R.id.btnZero, R.id.btnOne, R.id.btnTwo, R.id.btnThree, R.id.btnFour, R.id.btnFive, R.id.btnSix, R.id.btnSeven, R.id.btnEight, R.id.btnNine, R.id.btnDot};
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!result.equals(""))
+                if(resultPresent())
                 {
                     clear();
                 }
@@ -49,14 +46,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setOperators(){
+        final int[] operatorButtons = {R.id.btnAdd, R.id.btnSubtract, R.id.btnMultiply, R.id.btnDivide};
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!result.equals(""))
+                if(resultPresent())
                 {
                     clear();
                 }
                 else if(!operatorSelected && !txtScreen.getText().toString().equals("")) {
+                    if(txtScreen.getText().toString().equals(".")){
+                        txtScreen.setText(txtScreen.getText() + "0");
+                    }
                     operand1 = Double.parseDouble(txtScreen.getText().toString());
                     Button button = (Button) v;
                     txtScreen.setText(txtScreen.getText() + " " + (button.getText()) + " ");
@@ -78,10 +79,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setKeys(){
+        final int [] keyButtons = { R.id.btnClear, R.id.btnDelete, R.id.btnEqual};
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!result.equals(""))
+                if(resultPresent())
                 {
                     clear();
                 }
@@ -105,46 +107,57 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private boolean resultPresent(){
+        return txtScreen.getText().toString().split(" ").length > 3;
+    }
+
     private void calculate(){
         String[] arrOfTxtScreen = txtScreen.getText().toString().split(" ");
         if(arrOfTxtScreen.length < 3){
             Toast.makeText(getApplicationContext(), "Please enter operands and operators first", Toast.LENGTH_SHORT).show();
         }
         else{
+            if(arrOfTxtScreen[2].equals(".")){
+                txtScreen.setText(txtScreen.getText() + "0");
+                arrOfTxtScreen[2] = arrOfTxtScreen[2] + "0";
+            }
             operand2 = Double.parseDouble(arrOfTxtScreen[2]);
             switch (arrOfTxtScreen[1]){
                 case "+":
-                    add();
+                    showResult(add());
                     break;
                 case "-":
-                    subtract();
+                    showResult(subtract());
                     break;
                 case "*":
-                    multiply();
+                    showResult(multiply());
                     break;
                 case "/":
-                    divide();
+                    showResult(divide());
                     break;
             }
-            txtScreen.setText(txtScreen.getText() + " = " + result);
-            Toast.makeText(getApplicationContext(),"Result is " + result,Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void add(){
-        result = String.valueOf(operand1 + operand2);
+    private void showResult(double result){
+        txtScreen.setText(txtScreen.getText() + " = " + result);
+        Toast.makeText(getApplicationContext(),"Result is " + result,Toast.LENGTH_SHORT).show();
     }
 
-    private void subtract(){
-        result = String.valueOf(operand1 - operand2);
+    private double add(){
+        return operand1 + operand2;
     }
 
-    private void multiply(){
-        result = String.valueOf(operand1 * operand2);
+    private double subtract(){
+        return operand1 - operand2;
     }
 
-    private void divide(){
-        result = String.valueOf(operand1 / operand2);
+    private double multiply(){
+        return operand1 * operand2;
+    }
+
+    private double divide(){
+        return operand1 / operand2;
     }
 
     private void clear(){
@@ -152,7 +165,6 @@ public class MainActivity extends AppCompatActivity {
         operatorSelected = false;
         operand2 = 0.0d;
         operand1 = 0.0d;
-        result = "";
         Toast.makeText(getApplicationContext(),"Cleared, please enter values to continue",Toast.LENGTH_SHORT).show();
     }
 
