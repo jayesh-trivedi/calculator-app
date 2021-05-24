@@ -10,13 +10,13 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    final int[] numericButtons = {R.id.btnZero, R.id.btnOne, R.id.btnTwo, R.id.btnThree, R.id.btnFour, R.id.btnFive, R.id.btnSix, R.id.btnSeven, R.id.btnEight, R.id.btnNine, R.id.btnDot};
-    final int[] operatorButtons = {R.id.btnAdd, R.id.btnSubtract, R.id.btnMultiply, R.id.btnDivide};
-    final int [] keyButtons = { R.id.btnClear, R.id.btnDelete, R.id.btnEqual};
+    private final int[] numericButtons = {R.id.btnZero, R.id.btnOne, R.id.btnTwo, R.id.btnThree, R.id.btnFour, R.id.btnFive, R.id.btnSix, R.id.btnSeven, R.id.btnEight, R.id.btnNine, R.id.btnDot};
+    private final int[] operatorButtons = {R.id.btnAdd, R.id.btnSubtract, R.id.btnMultiply, R.id.btnDivide};
+    private final int [] keyButtons = { R.id.btnClear, R.id.btnDelete, R.id.btnEqual};
     private double operand1,operand2;
     private Boolean operatorSelected = false;
-    String result = "";
-    TextView txtScreen;
+    private String result = "";
+    private TextView txtScreen;
 
 
     @Override
