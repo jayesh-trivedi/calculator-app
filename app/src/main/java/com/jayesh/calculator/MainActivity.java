@@ -149,11 +149,12 @@ public class MainActivity extends AppCompatActivity {
         String text;
         if (result == (long) result) {
             text = txtScreen.getText() + " = " + (long) result;
+            Toast.makeText(getApplicationContext(), "Result is " + (long) result, Toast.LENGTH_SHORT).show();
         } else {
-            text = txtScreen.getText() + " = " + result;
+            text = txtScreen.getText() + " = " + (long) result;
+            Toast.makeText(getApplicationContext(), "Result is " + result, Toast.LENGTH_SHORT).show();
         }
         txtScreen.setText(text);
-        Toast.makeText(getApplicationContext(), "Result is " + result, Toast.LENGTH_SHORT).show();
     }
 
     private void clear() {
