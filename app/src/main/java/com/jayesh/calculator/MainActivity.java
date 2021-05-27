@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    private double operand1,operand2;
+    private double operand1, operand2;
     private boolean operatorSelected = false;
     private TextView txtScreen;
 
@@ -25,19 +25,20 @@ public class MainActivity extends AppCompatActivity {
         setKeys();
     }
 
-    private void setNumerics(){
-        final int[] numericButtons = {R.id.btnZero, R.id.btnOne, R.id.btnTwo, R.id.btnThree, R.id.btnFour, R.id.btnFive, R.id.btnSix, R.id.btnSeven, R.id.btnEight, R.id.btnNine, R.id.btnDot};
+    private void setNumerics() {
+        final int[] numericButtons = {R.id.btnZero, R.id.btnOne, R.id.btnTwo, R.id.btnThree, R.id.btnFour,
+                R.id.btnFive, R.id.btnSix, R.id.btnSeven, R.id.btnEight, R.id.btnNine, R.id.btnDot};
         View.OnClickListener listener = new View.OnClickListener() {
+            String text;
+
             @Override
             public void onClick(View v) {
-                if(resultPresent())
-                {
+                if (txtScreen.getText().toString().split(" ").length > 3) {
                     clear();
                 }
-                else {
-                    Button button = (Button) v;
-                    txtScreen.setText(txtScreen.getText() + "" + (button.getText()));
-                }
+                Button button = (Button) v;
+                text = txtScreen.getText() + "" + (button.getText());
+                txtScreen.setText(text);
             }
         };
         for (int id : numericButtons) {
@@ -45,29 +46,31 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setOperators(){
+    private void setOperators() {
         final int[] operatorButtons = {R.id.btnAdd, R.id.btnSubtract, R.id.btnMultiply, R.id.btnDivide};
         View.OnClickListener listener = new View.OnClickListener() {
+            String text;
+
             @Override
             public void onClick(View v) {
-                if(resultPresent())
-                {
+                if (txtScreen.getText().toString().split(" ").length > 3) {
                     clear();
                 }
-                else if(!operatorSelected && !txtScreen.getText().toString().equals("")) {
-                    if(txtScreen.getText().toString().equals(".")){
-                        txtScreen.setText(txtScreen.getText() + "0");
+                if (!operatorSelected && txtScreen.getText().toString().length() > 0) {
+
+                    if (!isNumeric(txtScreen.getText().toString())) {
+                        text = "0";
+                        txtScreen.setText(text);
                     }
                     operand1 = Double.parseDouble(txtScreen.getText().toString());
                     Button button = (Button) v;
-                    txtScreen.setText(txtScreen.getText() + " " + (button.getText()) + " ");
+                    text = txtScreen.getText() + " " + (button.getText()) + " ";
+                    txtScreen.setText(text);
                     operatorSelected = true;
-                }
-                else{
-                    if(operatorSelected) {
+                } else {
+                    if (operatorSelected) {
                         Toast.makeText(getApplicationContext(), "You have already selected an operator", Toast.LENGTH_SHORT).show();
-                    }
-                    else{
+                    } else {
                         Toast.makeText(getApplicationContext(), "Please enter an operand first", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -78,27 +81,24 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setKeys(){
-        final int [] keyButtons = { R.id.btnClear, R.id.btnDelete, R.id.btnEqual};
+    private void setKeys() {
+        final int[] keyButtons = {R.id.btnClear, R.id.btnDelete, R.id.btnEqual};
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(resultPresent())
-                {
+                if (txtScreen.getText().toString().split(" ").length > 3) {
                     clear();
                 }
-                else {
-                    Button button = (Button) v;
-                    switch (button.getText().toString()) {
-                        case "Delete":
-                            delete();
-                            break;
-                        case "=":
-                            calculate();
-                            break;
-                        case "C":
-                            clear();
-                    }
+                Button button = (Button) v;
+                switch (button.getText().toString()) {
+                    case "Delete":
+                        delete();
+                        break;
+                    case "=":
+                        calculate();
+                        break;
+                    case "C":
+                        clear();
                 }
             }
         };
@@ -107,84 +107,83 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private boolean resultPresent(){
-        return txtScreen.getText().toString().split(" ").length > 3;
-    }
-
-    private void calculate(){
+    private void calculate() {
+        String text;
         String[] arrOfTxtScreen = txtScreen.getText().toString().split(" ");
-        if(arrOfTxtScreen.length < 3){
+        if (arrOfTxtScreen.length < 3) {
             Toast.makeText(getApplicationContext(), "Please enter operands and operators first", Toast.LENGTH_SHORT).show();
-        }
-        else{
-            if(arrOfTxtScreen[2].equals(".")){
-                txtScreen.setText(txtScreen.getText() + "0");
-                arrOfTxtScreen[2] = arrOfTxtScreen[2] + "0";
+        } else {
+            if (!isNumeric(arrOfTxtScreen[2])) {
+                arrOfTxtScreen[2] = "0";
+                text = arrOfTxtScreen[0] + " " + arrOfTxtScreen[1] + " " +arrOfTxtScreen[2];
+                txtScreen.setText(text);
             }
             operand2 = Double.parseDouble(arrOfTxtScreen[2]);
-            switch (arrOfTxtScreen[1]){
+            switch (arrOfTxtScreen[1]) {
                 case "+":
-                    showResult(add());
+                    showResult(operand1 + operand2);
                     break;
                 case "-":
-                    showResult(subtract());
+                    showResult(operand1 - operand2);
                     break;
                 case "*":
-                    showResult(multiply());
+                    showResult(operand1 * operand2);
                     break;
                 case "/":
-                    showResult(divide());
+                    showResult(operand1 / operand2);
                     break;
             }
         }
     }
 
-    private void showResult(double result){
-        txtScreen.setText(txtScreen.getText() + " = " + result);
-        Toast.makeText(getApplicationContext(),"Result is " + result,Toast.LENGTH_SHORT).show();
+    public static boolean isNumeric(String str) {
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch(NumberFormatException e){
+            return false;
+        }
     }
 
-    private double add(){
-        return operand1 + operand2;
+    private void showResult(double result) {
+        String text;
+        if (result == (long) result) {
+            text = txtScreen.getText() + " = " + (long) result;
+        } else {
+            text = txtScreen.getText() + " = " + result;
+        }
+        txtScreen.setText(text);
+        Toast.makeText(getApplicationContext(), "Result is " + result, Toast.LENGTH_SHORT).show();
     }
 
-    private double subtract(){
-        return operand1 - operand2;
-    }
-
-    private double multiply(){
-        return operand1 * operand2;
-    }
-
-    private double divide(){
-        return operand1 / operand2;
-    }
-
-    private void clear(){
+    private void clear() {
         txtScreen.setText("");
         operatorSelected = false;
         operand2 = 0.0d;
         operand1 = 0.0d;
-        Toast.makeText(getApplicationContext(),"Cleared, please enter values to continue",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Cleared", Toast.LENGTH_SHORT).show();
     }
 
-    private void delete(){
+    private void delete() {
+        String text;
         String[] arrOfTxtScreen = txtScreen.getText().toString().split(" ");
-        switch (arrOfTxtScreen.length){
+        switch (arrOfTxtScreen.length) {
             case 3:
-                txtScreen.setText(txtScreen.getText().toString().substring(0, txtScreen.getText().toString().length() - 1));
+                text = txtScreen.getText().toString().substring(0, txtScreen.getText().toString().length() - 1);
+                txtScreen.setText(text);
                 break;
             case 2:
-                txtScreen.setText(txtScreen.getText().toString().substring(0, txtScreen.getText().toString().length() - 3));
+                text = txtScreen.getText().toString().substring(0, txtScreen.getText().toString().length() - 3);
+                txtScreen.setText(text);
                 operatorSelected = false;
                 break;
             case 1:
-                if(!txtScreen.getText().toString().equals("")){
-                    txtScreen.setText(txtScreen.getText().toString().substring(0, txtScreen.getText().toString().length() - 1));
+                if (txtScreen.getText().toString().length() > 0) {
+                    text = txtScreen.getText().toString().substring(0, txtScreen.getText().toString().length() - 1);
+                    txtScreen.setText(text);
                     operand1 = 0.0d;
-                }
-                else {
-                    Toast.makeText(getApplicationContext(),"Nothing to delete",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Nothing to delete", Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
